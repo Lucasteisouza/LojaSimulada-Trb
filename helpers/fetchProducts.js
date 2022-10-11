@@ -1,5 +1,11 @@
-const fetchProducts = () => {
-  // seu código aqui
+const fetchProducts = async (product) => {
+  if (typeof product === 'undefined') {
+    throw new Error('You must provide an url');
+  }
+  const url = `https://api.mercadolibre.com/sites/MLB/search?q=${product}`;
+  const response = await fetch(url);
+  const data = await response.json();
+  return data;
 };
 
 if (typeof module !== 'undefined') {
@@ -7,3 +13,4 @@ if (typeof module !== 'undefined') {
     fetchProducts,
   };
 }
+
