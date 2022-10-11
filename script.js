@@ -1,12 +1,5 @@
 // const { fetchProducts } = require('./helpers/fetchProducts');
 
-const selectFirstSibling = (event) => {
-  const target = event.target
-  const firstSib = target.parentNode.firstChild.innerText;
-  addToCart(firstSib);
-}
-
-
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
  * @param {string} imageSource - URL da imagem.
@@ -41,6 +34,29 @@ const createCustomElement = (element, className, innerText) => {
  * @param {string} product.thumbnail - URL da imagem do produto.
  * @returns {Element} Elemento de produto.
  */
+
+/**
+ * Função responsável por criar e retornar um item do carrinho.
+ * @param {Object} product - Objeto do produto.
+ * @param {string} product.id - ID do produto.
+ * @param {string} product.title - Título do produto.
+ * @param {string} product.price - Preço do produto.
+ * @returns {Element} Elemento de um item do carrinho.
+ */
+ const createCartItemElement = ({ id, title, price }) => {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
+  // li.addEventListener('click', cartItemClickListener);
+  return li;
+};
+
+ const addToCart = async (id) => {
+  const cartItems = document.querySelector('.cart__items');
+  const product = await fetchItem(id);
+  cartItems.appendChild(createCartItemElement(product));
+};
+
 const createProductItemElement = ({ id, title, thumbnail }) => {
   const section = document.createElement('section');
   section.className = 'item';
@@ -49,7 +65,11 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
   section.appendChild(createCustomElement('span', 'item__title', title));
   section.appendChild(createProductImageElement(thumbnail));
   const button = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
-  button.addEventListener('click', selectFirstSibling);
+  button.addEventListener('click', (event) => {
+    const { target } = event;
+    const firstSib = target.parentNode.firstChild.innerText;
+    addToCart(firstSib);
+  });
   section.appendChild(button);
 
   return section;
@@ -62,22 +82,6 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
  */
 const getIdFromProductItem = (product) => product.querySelector('span.id').innerText;
 
-/**
- * Função responsável por criar e retornar um item do carrinho.
- * @param {Object} product - Objeto do produto.
- * @param {string} product.id - ID do produto.
- * @param {string} product.title - Título do produto.
- * @param {string} product.price - Preço do produto.
- * @returns {Element} Elemento de um item do carrinho.
- */
-const createCartItemElement = ({ id, title, price }) => {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
-  // li.addEventListener('click', cartItemClickListener);
-  return li;
-};
-
 const appendAPI = async () => {
   const items = document.querySelector('.items');
   const data = await fetchProducts('computador');
@@ -87,13 +91,6 @@ const appendAPI = async () => {
   });
 };
 
-
-
-const addToCart = async (id) => {
-  const cartItems = document.querySelector('.cart__items');
-  const product = await fetchItem(id);
-  cartItems.appendChild(createCartItemElement(product));
-};
 appendAPI();
 
 window.onload = () => { };
