@@ -1,8 +1,8 @@
-const fetchProducts = async (product) => {
-  if (typeof product === 'undefined') {
+const fetchProducts = async (query) => {
+  if (typeof query === 'undefined') {
     throw new Error('You must provide an url');
   }
-  const url = `https://api.mercadolibre.com/sites/MLB/search?q=${product}`;
+  const url = `https://api.mercadolibre.com/sites/MLB/search?q=${query}`;
   const response = await fetch(url);
   const data = await response.json();
   return data;
