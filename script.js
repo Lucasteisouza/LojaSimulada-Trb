@@ -1,4 +1,4 @@
-const { fetchProducts } = require('./helpers/fetchProducts');
+// const { fetchProducts } = require('./helpers/fetchProducts');
 
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
@@ -68,5 +68,15 @@ const createCartItemElement = ({ id, title, price }) => {
   li.addEventListener('click', cartItemClickListener);
   return li;
 };
+
+const appendAPI = async ()=> {
+  const items = document.getElementsByClassName('items')[0];
+  const data = await fetchProducts('computador');
+  const results = data.results;
+  results.forEach((product) => {
+    items.appendChild(createProductItemElement(product));
+  })
+};
+appendAPI()
 
 window.onload = () => { };

@@ -13,4 +13,3 @@ if (typeof module !== 'undefined') {
     fetchProducts,
   };
 }
-
