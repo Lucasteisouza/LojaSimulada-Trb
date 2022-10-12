@@ -1,5 +1,4 @@
-// const { fetchProducts } = require('./helpers/fetchProducts');
-
+const cartItems = document.querySelector('.cart__items');
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
  * @param {string} imageSource - URL da imagem.
@@ -52,13 +51,20 @@ const cartItemClickListener = (event) => {
   li.className = 'cart__item';
   li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
+  saveCartItems(li.innerText);
   return li;
 };
 
  const addToCart = async (id) => {
-  const cartItems = document.querySelector('.cart__items');
   const product = await fetchItem(id);
   cartItems.appendChild(createCartItemElement(product));
+  const totalPrice = document.querySelector('.total-price');
+  const { price } = product;
+  if (totalPrice.innerText === '') {
+    totalPrice.innerText = price;
+  } else {
+  totalPrice.innerText = parseInt(totalPrice.innerText, 10) + price;
+  }
 };
 
 const createProductItemElement = ({ id, title, thumbnail }) => {
