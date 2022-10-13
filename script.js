@@ -1,4 +1,7 @@
 const cartItems = document.querySelector('.cart__items');
+const totalPrice = document.querySelector('.total-price');
+const emptyBtn = document.querySelector('.empty-cart');
+const loading = document.getElementsByClassName('loading');
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
  * @param {string} imageSource - URL da imagem.
@@ -35,6 +38,9 @@ const createCustomElement = (element, className, innerText) => {
  */
 
 const cartItemClickListener = (event) => {
+  const oldTotal = parseInt(totalPrice.innerText, 10);
+  const itemPrice = parseInt(event.target.id, 10);
+  totalPrice.innerText = oldTotal - itemPrice;
   event.target.remove();
 };
 
@@ -51,20 +57,15 @@ const cartItemClickListener = (event) => {
   li.className = 'cart__item';
   li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
-  saveCartItems(li.innerText);
+  li.id = price;
   return li;
 };
 
  const addToCart = async (id) => {
   const product = await fetchItem(id);
   cartItems.appendChild(createCartItemElement(product));
-  const totalPrice = document.querySelector('.total-price');
   const { price } = product;
-  if (totalPrice.innerText === '') {
-    totalPrice.innerText = price;
-  } else {
   totalPrice.innerText = parseInt(totalPrice.innerText, 10) + price;
-  }
 };
 
 const createProductItemElement = ({ id, title, thumbnail }) => {
@@ -101,6 +102,21 @@ const appendAPI = async () => {
   });
 };
 
-appendAPI();
+const emptyCart = () => {
+  const cartItemList = document.querySelectorAll('.cart__item');
+  cartItemList.forEach((element) => element.remove());
+};
 
-window.onload = () => { };
+emptyBtn.addEventListener('click', emptyCart);
+
+const loader = () => {
+  loading[0].classList.add('display');
+  setTimeout(() => {
+    loading[0].classList.remove('display');
+  }, 800);
+};
+
+window.onload = () => {
+  loader();
+  appendAPI();
+};
