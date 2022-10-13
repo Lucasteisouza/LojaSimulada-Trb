@@ -110,10 +110,9 @@ const emptyCart = () => {
 emptyBtn.addEventListener('click', emptyCart);
 
 const loader = () => {
-  loading[0].classList.add('display');
   setTimeout(() => {
-    loading[0].classList.remove('display');
-  }, 800);
+    loading[0].remove();
+  }, 1500);
 };
 
 window.onload = () => {

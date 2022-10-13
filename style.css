@@ -9,14 +9,6 @@ body {
   background-color: rgb(246, 246, 246);
 }
 
-.loading {
-  display: none;
-}
-
-.display {
-  display: inline;
-}
-
 .header {
   position: relative;
   background-color: rgb(3, 52, 45);
