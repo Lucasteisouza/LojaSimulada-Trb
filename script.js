@@ -66,6 +66,8 @@ const cartItemClickListener = (event) => {
   cartItems.appendChild(createCartItemElement(product));
   const { price } = product;
   totalPrice.innerText = parseInt(totalPrice.innerText, 10) + price;
+  const cartItem = document.querySelectorAll('.cart__item');
+  saveCartItems(cartItem);
 };
 
 const createProductItemElement = ({ id, title, thumbnail }) => {
@@ -115,7 +117,21 @@ const loader = () => {
   }, 1500);
 };
 
+const storageretriever = () => {
+  if (localStorage.getItem('cartItems') !== null) {
+    const saved = getSavedCartItems();
+    saved.forEach((element) => {
+      const li = document.createElement('li');
+      li.innerText = element;
+      li.className = 'cart__items';
+      li.addEventListener('click', cartItemClickListener);
+      cartItems.append(li);
+    });
+  }
+};
+
 window.onload = () => {
+  storageretriever();
   loader();
   appendAPI();
 };
