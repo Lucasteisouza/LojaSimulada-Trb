@@ -2,6 +2,7 @@ const cartItems = document.querySelector('.cart__items');
 const totalPrice = document.querySelector('.total-price');
 const emptyBtn = document.querySelector('.empty-cart');
 const loading = document.getElementsByClassName('loading');
+const CIidentif = '.cart__item';
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
  * @param {string} imageSource - URL da imagem.
@@ -37,11 +38,22 @@ const createCustomElement = (element, className, innerText) => {
  * @returns {Element} Elemento de produto.
  */
 
+function updatePrice() {
+  const cartItem = document.querySelectorAll('.cart__item');
+  console.log(cartItem);
+  let sum = 0;
+cartItem.forEach((element) => {
+  sum += parseFloat(element.id, 10);
+});
+totalPrice.innerText = sum;
+}
+
 const cartItemClickListener = (event) => {
-  const oldTotal = parseInt(totalPrice.innerText, 10);
-  const itemPrice = parseInt(event.target.id, 10);
-  totalPrice.innerText = oldTotal - itemPrice;
   event.target.remove();
+  const cartItem = document.querySelectorAll(CIidentif);
+  console.log(cartItem);
+  saveCartItems(cartItem);
+  updatePrice();
 };
 
 /**
@@ -64,9 +76,8 @@ const cartItemClickListener = (event) => {
  const addToCart = async (id) => {
   const product = await fetchItem(id);
   cartItems.appendChild(createCartItemElement(product));
-  const { price } = product;
-  totalPrice.innerText = parseInt(totalPrice.innerText, 10) + price;
-  const cartItem = document.querySelectorAll('.cart__item');
+  const cartItem = document.querySelectorAll(CIidentif);
+  updatePrice();
   saveCartItems(cartItem);
 };
 
@@ -105,8 +116,9 @@ const appendAPI = async () => {
 };
 
 const emptyCart = () => {
-  const cartItemList = document.querySelectorAll('.cart__item');
+  const cartItemList = document.querySelectorAll(CIidentif);
   cartItemList.forEach((element) => element.remove());
+  updatePrice();
 };
 
 emptyBtn.addEventListener('click', emptyCart);
@@ -117,7 +129,7 @@ const loader = () => {
   }, 1500);
 };
 
-const storageretriever = () => {
+const storageRetriever = () => {
   if (localStorage.getItem('cartItems') !== null) {
     const saved = getSavedCartItems();
     saved.forEach((element) => {
@@ -127,11 +139,12 @@ const storageretriever = () => {
       li.addEventListener('click', cartItemClickListener);
       cartItems.append(li);
     });
+    updatePrice();
   }
 };
 
 window.onload = () => {
-  storageretriever();
+  storageRetriever();
   loader();
   appendAPI();
 };
