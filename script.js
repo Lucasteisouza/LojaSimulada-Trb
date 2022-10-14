@@ -15,6 +15,14 @@ const createProductImageElement = (imageSource) => {
   return img;
 };
 
+const getSavedCartItems2 = () => {
+  const localRescued = localStorage.getItem('cartItems');
+  if (localRescued !== undefined) {
+    const parsed = JSON.parse(localRescued);
+    return parsed;
+  } return '';
+};
+
 /**
  * Função responsável por criar e retornar qualquer elemento.
  * @param {string} element - Nome do elemento a ser criado.
@@ -131,7 +139,7 @@ const loader = () => {
 
 const storageRetriever = () => {
   if (localStorage.getItem('cartItems') !== null) {
-    const saved = getSavedCartItems();
+    const saved = getSavedCartItems2();
     saved.forEach((element) => {
       const li = document.createElement('li');
       li.innerText = element;
